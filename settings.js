@@ -9,6 +9,11 @@ function getParameter(){
     return parameters;
 }
 
+function setParametersInLocalStorage(parameters) {
+    localStorage.setItem("parameters", JSON.stringify({...parameters}))
+}
+
 export{
     getParameter,
+    setParametersInLocalStorage,
 }

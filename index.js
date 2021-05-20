@@ -1,4 +1,4 @@
-import {getParameter} from './settings.js'
+import {getParameter, setParametersInLocalStorage} from './settings.js'
 
     const btnStart = document.querySelector('.start');
     const btnReset = document.querySelector('.reset');
@@ -6,13 +6,21 @@ import {getParameter} from './settings.js'
     const minsClock = document.querySelector('.mins');
     const secsClock = document.querySelector('.secs');
     const btnSendParameters = document.getElementById('sendParameters');
+    const inputFocusTime = document.getElementById('focusTime');
+    
     
     let h = 0;
     let m = 25;
     let s = 0;
     let stopIntervalTimer;
     
-window.onload = ()=> btnEvents();
+window.onload = ()=> { btnEvents(); loadParameters(); };
+
+function loadParameters() {
+
+    (JSON.parse(localStorage.getItem("parameters"))) ? inputFocusTime.value = Number(JSON.parse(localStorage.getItem("parameters")).focusTime)
+                                                     : inputFocusTime.value = m;
+}
 
 function btnEvents() {
     btnStart.addEventListener('click', startClock);
@@ -29,7 +37,7 @@ function startClock() {
     btnStart.removeEventListener('click', startClock);
     btnSendParameters.setAttribute("disabled", "true");
     btnPause.addEventListener('click', pauseClock);
-
+    
     stopIntervalTimer = setInterval(()=> {
         
         if (s === 0) {s = 60;  m--; s--;}
@@ -37,7 +45,6 @@ function startClock() {
         
         secsClock.innerHTML = `${String(s).padStart(2,"0")}`;
         minsClock.innerHTML = `${String(m).padStart(2,"0")}`;
-        console.log(s)
     }, 1000)
 
 }
@@ -86,7 +93,8 @@ function saveParameters(e) {
     let newParametersSave = getParameter();
     m = Number(newParametersSave.focusTime)
     minsClock.innerHTML = `${String(m).padStart(2,"0")}`;
-
-    console.log(m)
+    setParametersInLocalStorage(newParametersSave)
+    
+    console.log(newParametersSave)
     
 }
