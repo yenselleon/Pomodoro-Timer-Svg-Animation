@@ -23,12 +23,17 @@ window.onload = ()=> { btnEvents(); loadParameters(); };
 /*------------------------------------------*/
 function loadParameters() {
     //Load input focus time value
-    (JSON.parse(localStorage.getItem("parameters"))) ? inputFocusTime.value = Number(JSON.parse(localStorage.getItem("parameters")).focusTime)
+    const focusTimeInputValue = (JSON.parse(localStorage.getItem("parameters"))) ? inputFocusTime.value = Number(JSON.parse(localStorage.getItem("parameters")).focusTime)
                                                      : inputFocusTime.value = m;
     //Load Input break time value
-    (JSON.parse(localStorage.getItem("parameters")) && Number(JSON.parse(localStorage.getItem("parameters")).breakTime !== "")) 
+    const breakTimeInputvalue = (JSON.parse(localStorage.getItem("parameters")) && Number(JSON.parse(localStorage.getItem("parameters")).breakTime !== "")) 
                                                      ? inputBreakTime.value = Number(JSON.parse(localStorage.getItem("parameters")).breakTime)
                                                      : inputBreakTime.value = 5;
+
+    return {
+        focusTimeInputValue,
+        breakTimeInputvalue,
+    }
 }
 
 function btnEvents() {
@@ -49,7 +54,14 @@ function startClock() {
     
     stopIntervalTimer = setInterval(()=> {
         
-        if (s === 0 && m === 0) { clearInterval(stopIntervalTimer); resetClock(); }
+        if (s === 0 && m === 0) { 
+            clearInterval(stopIntervalTimer); 
+            startBreak();
+
+            secsClock.innerHTML = `${String(s).padStart(2,"0")}`;
+            minsClock.innerHTML = `${String(inputBreakTime.value).padStart(2,"0")}`;
+            return;
+        }
         else if(s < 5 && m === 0) { console.log("animate"); s--; }
         else if(s === 0) {s = 60;  m--; s--;}
         else if (s < 60) {s--}
@@ -65,6 +77,10 @@ function startClock() {
 /*------------------------------------------*/
 
 function startBreak() {
+    loadParameters();
+    
+
+
     
 }
 
