@@ -13,7 +13,7 @@ function setParametersInLocalStorage(parameters) {
     localStorage.setItem("parameters", JSON.stringify({...parameters}))
 }
 
-export{
+module.exports = {
     getParameter,
     setParametersInLocalStorage,
 }

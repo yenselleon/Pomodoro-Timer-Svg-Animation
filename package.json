@@ -1,0 +1,24 @@
+{
+  "name": "pomodoro_vanilla_js_svganimation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-bundle": "browserify index.js -o bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yenselleon/Pomodoro-Timer-Svg-Animation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yenselleon/Pomodoro-Timer-Svg-Animation/issues"
+  },
+  "homepage": "https://github.com/yenselleon/Pomodoro-Timer-Svg-Animation#readme",
+  "dependencies": {
+    "browserify": "^17.0.0",
+    "progressbar.js": "^1.1.0"
+  }
+}

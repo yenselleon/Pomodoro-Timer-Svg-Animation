@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomodoro Vanilla Js</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -17,10 +18,10 @@
         <div class="mins">00</div>
         <div>:</div>
         <div class="secs">00</div>
-        <audio src="https://soundbible.com/mp3/service-bell_daniel_simion.mp3"></audio>
+        <audio id="endTimeSound" src="https://soundbible.com/mp3/service-bell_daniel_simion.mp3"></audio>
         <!--Svg-->
-        <svg class="progress-ring" hight="120" width="120">
-            <circle class="progress-ring__circle" stroke-width="/" fill="transparent" r="50" cx="60" cy="60" />
+        <svg class="progress-ring">
+            <!-- <circle class="progress-ring__circle" r="60" cx="63" cy="64" /> -->
         </svg>
 
 
@@ -54,7 +55,7 @@
     </form>
 
 
-    <script src="index.js" type="module"></script>
+    <script src="./bundle.js" type="module"></script>
 </body>
 
 </html>

@@ -1,8 +1,6 @@
 @import url(https://fonts.googleapis.com/css2?family=Montserrat%3Aital%2Cwght%400%2C300%3B0%2C500%3B1%2C900&display=swap);
 
-*,
-*::after,
-*::before{
+*{
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -10,7 +8,6 @@
 
 body{
     height: 100vh;
-    padding: 35px;
 
     background-color: rgb(243, 243, 243);
     color: #131313;
@@ -35,7 +32,7 @@ input{
 
 .btn-group{
     display: flex;
-    justify-content:  space-between;
+    justify-content:  space-around;
     align-items: center;
     height: 10%;
     margin: 35px 0;
@@ -98,22 +95,33 @@ form > button{
     font-weight: bold;
     height: 30%;
     font-size: 24px;
+    border: 1px solid red;
 }
 
 .progress-ring{
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-40%, -50%);
+    /* border: 1px solid green; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 130px;
+    height: 130px;
+    z-index: -1;
+    
+}
+
+.progress-ring > svg{
+    stroke: #2940d3;
+
     
 }
 
 .progress-ring__circle{
-    transition: 0.5s;
-    transform: rotate(-90deg);
-    transform-origin: 50% center;
-    stroke: rgb(51, 65, 255);
-
+    
+    border: 1px solid yellow;
+    fill: transparent;
+    stroke: blue;
+    stroke-width: 10px;
 }
 
 .danger{
@@ -125,18 +133,18 @@ form > button{
 @keyframes pulse {
     0%,
     100%{
-        transform: rotate(-90deg) scale(1);
+        transform: scale(1);
     }
 
     50%{
-        transform: rotate(-90deg) scale(1.05);
+        transform: scale(1.05);
     }
     75%{
-        transform: rotate(-90deg) scale(0.8);
+        transform: scale(0.8);
     }
 }
 
-@media screen and (min-width: 768px){
+/* @media screen and (min-width: 768px){
 
     body{
         display: grid;
@@ -170,4 +178,4 @@ form > button{
         justify-content: space-around;
     }
 
-} 
+}  */

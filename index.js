@@ -1,4 +1,5 @@
-import {getParameter, setParametersInLocalStorage} from './settings.js'
+const {getParameter, setParametersInLocalStorage} = require('./settings.js');
+const {bar, progressPorcentageValue} = require('./progress.js');
 
     const btnStart = document.querySelector('.start');
     const btnReset = document.querySelector('.reset');
@@ -8,8 +9,10 @@ import {getParameter, setParametersInLocalStorage} from './settings.js'
     const btnSendParameters = document.getElementById('sendParameters');
     const inputFocusTime = document.getElementById('focusTime');
     const inputBreakTime = document.getElementById('brakTime');
+    const endTimeSound = document.getElementById('endTimeSound');
+    const progressRing = document.querySelector('.progress-ring');
     
-    
+    let currentColorSvgCircle = '#2940d3';
     let h = 0;
     let m = 25;
     let s = 0;
@@ -22,6 +25,7 @@ window.onload = ()=> { btnEvents(); loadParameters(); };
 /*--Cargar datos del LocalStorage--*/
 /*------------------------------------------*/
 function loadParameters() {
+    console.log('cargo nuevamente')
     //Load input focus time value
     const focusTimeInputValue = (JSON.parse(localStorage.getItem("parameters"))) ? inputFocusTime.value = Number(JSON.parse(localStorage.getItem("parameters")).focusTime)
                                                      : inputFocusTime.value = m;
@@ -30,6 +34,10 @@ function loadParameters() {
                                                      ? inputBreakTime.value = Number(JSON.parse(localStorage.getItem("parameters")).breakTime)
                                                      : inputBreakTime.value = 5;
 
+    minsClock.innerHTML = `${String(focusTimeInputValue).padStart(2,"0")}`;
+
+    progressRing.append(bar);
+    
     return {
         focusTimeInputValue,
         breakTimeInputvalue,
@@ -48,24 +56,47 @@ function btnEvents() {
 /*------------------------------------------*/
 
 function startClock() {
+    let {focusTimeInputValue} = loadParameters();
+
     btnStart.removeEventListener('click', startClock);
     btnSendParameters.setAttribute("disabled", "true");
     btnPause.addEventListener('click', pauseClock);
+    m = focusTimeInputValue;
+    currentColorSvgCircle = '#2940d3';
+
     
     stopIntervalTimer = setInterval(()=> {
-        
+        console.log({m,s})
         if (s === 0 && m === 0) { 
             clearInterval(stopIntervalTimer); 
-            startBreak();
-
             secsClock.innerHTML = `${String(s).padStart(2,"0")}`;
             minsClock.innerHTML = `${String(inputBreakTime.value).padStart(2,"0")}`;
+
+            endTimeSound.play();
+            startBreak();
             return;
         }
-        else if(s < 5 && m === 0) { console.log("animate"); s--; }
+        else if(s < 5 && m === 0) { s--; currentColorSvgCircle = '#ce1212';progressRing.classList.add('danger')}
         else if(s === 0) {s = 60;  m--; s--;}
         else if (s < 60) {s--}
-        
+
+        try {
+            let progressTime = progressPorcentageValue({m : m, s : s, focusTimeValue : focusTimeInputValue});
+            console.log(progressTime)
+            bar.animate(progressTime, {
+                
+                // Set default step function for all animate calls
+                step: function(state, circle) {
+                    circle.path.setAttribute('stroke', currentColorSvgCircle);
+                    circle.path.setAttribute('stroke-width', 8);
+                
+                }
+                
+            });
+            
+        } catch (error) {
+            console.log(error)
+        }
         secsClock.innerHTML = `${String(s).padStart(2,"0")}`;
         minsClock.innerHTML = `${String(m).padStart(2,"0")}`;
     }, 1000)
@@ -77,9 +108,47 @@ function startClock() {
 /*------------------------------------------*/
 
 function startBreak() {
-    loadParameters();
-    
+    let {focusTimeInputValue, breakTimeInputvalue} = loadParameters();
+    m = breakTimeInputvalue;
+    currentColorSvgCircle = '#ff8303';
 
+    progressRing.classList.remove('danger')
+    stopIntervalTimer = setInterval(()=> {
+        
+        if (s === 0 && m === 0) { 
+            clearInterval(stopIntervalTimer); 
+            secsClock.innerHTML = `${String(s).padStart(2,"0")}`;
+            minsClock.innerHTML = `${String(focusTimeInputValue).padStart(2,"0")}`;
+
+            endTimeSound.play();
+            resetClock();
+            return;
+        }
+        else if(s < 5 && m === 0) { console.log("animate"); s--; }
+        else if(s === 0) {s = 60;  m--; s--;}
+        else if (s < 60) {s--}
+
+        try {
+            let progressTime = progressPorcentageValue({m : m, s : s, focusTimeValue : focusTimeInputValue});
+            console.log(progressTime)
+            bar.animate(progressTime, {
+                
+                // Set default step function for all animate calls
+                step: function(state, circle) {
+                    circle.path.setAttribute('stroke', currentColorSvgCircle);
+                    circle.path.setAttribute('stroke-width', 8);
+                
+                }
+                
+            });
+            
+        } catch (error) {
+            console.log(error)
+        }
+
+        secsClock.innerHTML = `${String(s).padStart(2,"0")}`;
+        minsClock.innerHTML = `${String(m).padStart(2,"0")}`;
+    }, 1000)
 
     
 }
@@ -105,7 +174,7 @@ function resetClock() {
 
     secsClock.innerHTML = `${String(s).padStart(2,"0")}`;
     minsClock.innerHTML = `${String(m).padStart(2,"0")}`;
-
+    bar.animate(0);
 }
 
 
