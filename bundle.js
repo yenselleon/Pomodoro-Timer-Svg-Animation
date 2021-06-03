@@ -15,11 +15,12 @@ const {bar, progressPorcentageValue} = require('./progress.js');
     
     let currentColorSvgCircle = '#2940d3';
     let h = 0;
-    let m = 25;
+    let m = loadParameters().focusTimeInputValue;
     let s = 0;
     let stopIntervalTimer;
     
 window.onload = ()=> { btnEvents(); loadParameters(); };
+minsClock.innerHTML = `${String(m).padStart(2,"0")}`;
 
 
 /*------------------------------------------*/
@@ -29,13 +30,12 @@ function loadParameters() {
     console.log('cargo nuevamente')
     //Load input focus time value
     const focusTimeInputValue = (JSON.parse(localStorage.getItem("parameters"))) ? inputFocusTime.value = Number(JSON.parse(localStorage.getItem("parameters")).focusTime)
-                                                     : inputFocusTime.value = m;
+                                                     : inputFocusTime.value = 25;
     //Load Input break time value
     const breakTimeInputvalue = (JSON.parse(localStorage.getItem("parameters")) && Number(JSON.parse(localStorage.getItem("parameters")).breakTime !== "")) 
                                                      ? inputBreakTime.value = Number(JSON.parse(localStorage.getItem("parameters")).breakTime)
                                                      : inputBreakTime.value = 5;
 
-    minsClock.innerHTML = `${String(focusTimeInputValue).padStart(2,"0")}`;
 
     progressRing.append(bar);
     
@@ -62,7 +62,6 @@ function startClock() {
     btnStart.removeEventListener('click', startClock);
     btnSendParameters.setAttribute("disabled", "true");
     btnPause.addEventListener('click', pauseClock);
-    m = focusTimeInputValue;
     currentColorSvgCircle = '#2940d3';
 
     
@@ -77,7 +76,7 @@ function startClock() {
             startBreak();
             return;
         }
-        else if(s < 5 && m === 0) { s--; currentColorSvgCircle = '#ce1212';progressRing.classList.add('danger')}
+        else if(s <= 5 && m === 0) { s--; currentColorSvgCircle = '#ce1212';progressRing.classList.add('danger')}
         else if(s === 0) {s = 60;  m--; s--;}
         else if (s < 60) {s--}
 
@@ -112,8 +111,8 @@ function startBreak() {
     let {focusTimeInputValue, breakTimeInputvalue} = loadParameters();
     m = breakTimeInputvalue;
     currentColorSvgCircle = '#ff8303';
-
     progressRing.classList.remove('danger')
+
     stopIntervalTimer = setInterval(()=> {
         
         if (s === 0 && m === 0) { 
@@ -125,7 +124,7 @@ function startBreak() {
             resetClock();
             return;
         }
-        else if(s < 5 && m === 0) { console.log("animate"); s--; }
+        else if(s <= 5 && m === 0) { progressRing.classList.add('danger'); s--; currentColorSvgCircle = '#ce1212';}
         else if(s === 0) {s = 60;  m--; s--;}
         else if (s < 60) {s--}
 
@@ -165,6 +164,7 @@ function resetClock() {
     btnReset.removeEventListener('click', pauseClock);
     btnStart.addEventListener('click', startClock);
     btnSendParameters.removeAttribute("disabled");
+    progressRing.classList.remove('danger')
 
 
     h = 0;
